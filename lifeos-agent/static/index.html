@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>LifeOS Agent</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2d;--panel2:#17223a;--line:#26334d;--text:#eef3ff;--muted:#9aa9c4;--accent:#7c8cff;--cyan:#56d8d2;--danger:#ff7e91;--green:#65d6a4}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#182447 0,transparent 35%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;background:var(--accent);color:#fff;font-weight:650}button.secondary{background:#24314c;color:var(--text);border:1px solid var(--line)}button.danger{background:#5a2636}button:disabled{opacity:.5;cursor:not-allowed}
+.app{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100vh}.side{padding:25px 16px;border-right:1px solid var(--line);background:#0c1325}.brand{font-size:22px;font-weight:800;letter-spacing:-.8px;margin:0 0 8px}.brand span{color:var(--cyan)}.tag{font-size:12px;color:var(--muted);margin-bottom:30px}.nav{display:grid;gap:8px}.nav button{background:transparent;text-align:left;color:var(--muted);font-weight:600}.nav button.active,.nav button:hover{background:var(--panel2);color:var(--text)}.side-note{margin-top:35px;padding:12px;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px;line-height:1.6}
+main{padding:28px;max-width:1500px;width:100%;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px}.eyebrow{font-size:12px;color:var(--cyan);font-weight:800;letter-spacing:1.4px;text-transform:uppercase}.top h1{font-size:30px;letter-spacing:-1px;margin:6px 0}.sub{color:var(--muted);font-size:14px}.status{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}.dot{width:8px;height:8px;border-radius:50%;background:var(--green)}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}.card{background:linear-gradient(145deg,rgba(22,32,55,.96),rgba(16,24,42,.96));border:1px solid var(--line);border-radius:17px;padding:18px;min-width:0}.metric-label{font-size:13px;color:var(--muted)}.metric{font-size:29px;font-weight:800;letter-spacing:-1px;margin:8px 0}.metric-foot{font-size:12px;color:var(--muted)}.layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);gap:16px}.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.card h2{font-size:16px;margin:0}.list{display:grid;gap:10px}.task{display:flex;align-items:flex-start;gap:12px;padding:13px;border:1px solid var(--line);border-radius:12px;background:rgba(11,17,31,.4)}.task-main{flex:1;min-width:0}.task-title{font-weight:700;overflow-wrap:anywhere}.task-meta{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#283451;color:#cbd6f2;font-size:11px;margin-right:5px}.pill.urgent,.pill.high{background:#4b2639;color:#ffb8c5}.pill.completed{background:#173e39;color:#8ef0c6}.actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.actions button{padding:6px 9px;font-size:12px}.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}.form{display:grid;gap:10px}.form input,.form textarea,.form select,.chat-input{width:100%;background:#0c1426;border:1px solid var(--line);border-radius:10px;padding:11px;color:var(--text);outline:none}.form input:focus,.form textarea:focus,.form select:focus,.chat-input:focus{border-color:var(--accent)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.muted{color:var(--muted)}.hidden{display:none!important}.chat{display:grid;grid-template-rows:minmax(280px,1fr) auto;min-height:420px}.messages{display:flex;flex-direction:column;gap:12px;overflow:auto;max-height:55vh;padding:4px 2px 16px}.bubble{max-width:88%;padding:12px 14px;border-radius:13px;white-space:pre-wrap;line-height:1.55;font-size:14px}.bubble.user{align-self:flex-end;background:#34416e}.bubble.assistant{align-self:flex-start;background:#1b2942;border:1px solid var(--line)}.chat-form{display:flex;gap:9px;border-top:1px solid var(--line);padding-top:14px}.chat-form input{flex:1;min-width:0}.schedule-block{padding:12px;border-left:3px solid var(--cyan);background:#101b30;border-radius:8px;margin:9px 0}.schedule-time{font-size:12px;color:var(--cyan);font-weight:800}.schedule-title{font-weight:700;margin-top:4px}.notice{padding:12px;border-radius:10px;background:#1c2d40;color:#b9d8ef;font-size:13px;line-height:1.5;margin-bottom:14px}.toast{position:fixed;right:20px;bottom:20px;background:#1b2b40;border:1px solid var(--line);padding:13px 17px;border-radius:12px;max-width:340px;box-shadow:0 15px 45px #0007;z-index:5}.bar{height:7px;background:#26334d;border-radius:99px;overflow:hidden;margin:10px 0}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--cyan));width:0}
+@media(max-width:900px){.app{grid-template-columns:1fr}.side{padding:14px;border-right:0;border-bottom:1px solid var(--line)}.brand{display:inline-block;margin-right:12px}.tag{display:inline}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap}.side-note{display:none}main{padding:18px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
+@media(max-width:520px){.top{align-items:flex-start;flex-direction:column}.top h1{font-size:25px}.grid{gap:9px}.card{padding:14px}.row{grid-template-columns:1fr}.bubble{max-width:96%}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="brand">LifeOS<span>.</span></div><div class="tag">YOUR PERSONAL AI OPERATOR</div>
+  <nav class="nav">
+    <button class="active" data-page="overview">◫ &nbsp; Overview</button>
+    <button data-page="tasks">✓ &nbsp; Tasks</button>
+    <button data-page="assistant">✳ &nbsp; AI Assistant</button>
+    <button data-page="schedule">▦ &nbsp; Schedule</button>
+    <button data-page="insights">↗ &nbsp; Insights</button>
+    <button data-page="activity">≡ &nbsp; Activity log</button>
+    <button data-page="settings">⚙ &nbsp; Settings</button>
+  </nav>
+  <div class="side-note">LOCAL-FIRST MODE<br/>Your tasks are stored on this computer. Ollama is optional; no paid API key is needed.</div>
+</aside>
+<main>
+  <header class="top"><div><div class="eyebrow" id="eyebrow">YOUR COMMAND CENTER</div><h1 id="page-title">Good day. Let's make progress.</h1><div class="sub" id="page-sub">A clear plan beats a busy day.</div></div><div class="status"><span class="dot" id="ai-dot"></span><span id="ai-status">Checking local AI…</span></div></header>
+  <section id="overview" class="page">
+    <div class="grid">
+      <div class="card"><div class="metric-label">Total tasks</div><div class="metric" id="m-total">0</div><div class="metric-foot">Saved in LifeOS</div></div>
+      <div class="card"><div class="metric-label">Pending</div><div class="metric" id="m-pending">0</div><div class="metric-foot">Still to do</div></div>
+      <div class="card"><div class="metric-label">Overdue</div><div class="metric" id="m-overdue">0</div><div class="metric-foot">Need attention</div></div>
+      <div class="card"><div class="metric-label">Completion rate</div><div class="metric" id="m-rate">0%</div><div class="bar"><span id="rate-bar"></span></div><div class="metric-foot">Based on saved tasks</div></div>
+    </div>
+    <div class="layout">
+      <div class="card"><div class="card-head"><h2>Priority tasks</h2><button class="secondary" onclick="showPage('tasks')">View all</button></div><div class="list" id="overview-tasks"></div></div>
+      <div class="card"><div class="card-head"><h2>LifeOS briefing</h2><button class="secondary" onclick="chatStarter('What should I focus on today?')">Ask AI</button></div><div class="notice" id="briefing">Loading your task overview…</div><button onclick="showPage('schedule')">Build today's plan →</button><div style="height:18px"></div><h2>Quick capture</h2><form class="form" id="quick-form"><input id="quick-title" placeholder="What do you need to do?" required maxlength="200"/><div class="row"><select id="quick-priority"><option value="medium">Medium priority</option><option value="low">Low priority</option><option value="high">High priority</option><option value="urgent">Urgent</option></select><input id="quick-duration" type="number" min="5" max="1440" value="60" title="Minutes"/></div><button>Add task</button></form></div>
+    </div>
+  </section>
+  <section id="tasks" class="page hidden">
+    <div class="layout">
+      <div class="card"><div class="card-head"><h2>Your tasks</h2><input id="task-search" placeholder="Search tasks…" style="max-width:200px" class="chat-input"/></div><div class="list" id="task-list"></div></div>
+      <div class="card"><h2 style="margin-bottom:16px">Create a task</h2><form class="form" id="task-form">
+        <input id="task-title" placeholder="Task title" required maxlength="200"/>
+        <textarea id="task-description" placeholder="Description (optional)" rows="3"></textarea>
+        <div class="row"><select id="task-priority"><option value="medium">Medium priority</option><option value="low">Low priority</option><option value="high">High priority</option><option value="urgent">Urgent</option></select><input id="task-duration" type="number" min="5" max="1440" value="60" title="Estimated minutes"/></div>
+        <label class="muted" style="font-size:12px">Deadline (optional)</label><input id="task-deadline" type="date"/>
+        <button>Create task</button></form><div style="height:15px"></div><button class="secondary" onclick="seedDemo()">Load sample tasks</button></div>
+    </div>
+  </section>
+  <section id="assistant" class="page hidden">
+    <div class="card chat"><div><div class="notice">Ask LifeOS to prioritize tasks, plan your day, or help you think through a workload. In fallback mode, planning uses deterministic rules. AI text is advisory; use Tasks and Schedule to commit changes.</div><div class="messages" id="messages"><div class="bubble assistant">Hi! I'm LifeOS. I can help you organize your tasks and plan your day. Try “What should I focus on?” or “Plan my day.”</div></div></div><form class="chat-form" id="chat-form"><input class="chat-input" id="chat-input" placeholder="Tell LifeOS what you need…" maxlength="4000" required/><button>Send</button></form></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="secondary" onclick="chatStarter('Plan my day')">Plan my day</button><button class="secondary" onclick="chatStarter('What should I focus on?')">Priorities</button><button class="secondary" onclick="chatStarter('Summarize my tasks')">Summarize tasks</button></div>
+  </section>
+  <section id="schedule" class="page hidden">
+    <div class="card"><div class="card-head"><div><h2>Today's proposed schedule</h2><div class="sub" id="plan-date"></div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="secondary" onclick="loadPlan()">Refresh plan</button><button onclick="applyPlan()">Apply schedule</button></div></div><div class="notice">The planner proposes time blocks using your working hours, priorities, task durations, and remaining time. Review the plan before applying it.</div><div id="plan-list"></div><div id="unscheduled"></div></div>
+  </section>
+  <section id="insights" class="page hidden">
+    <div class="grid"><div class="card"><div class="metric-label">Tasks completed</div><div class="metric" id="i-completed">0</div></div><div class="card"><div class="metric-label">Active tasks</div><div class="metric" id="i-active">0</div></div><div class="card"><div class="metric-label">Overdue</div><div class="metric" id="i-overdue">0</div></div><div class="card"><div class="metric-label">Completion</div><div class="metric" id="i-rate">0%</div></div></div>
+    <div class="card"><h2>Progress overview</h2><p class="sub">Calculated from your actual saved tasks. Insights improve as you use LifeOS.</p><div class="bar"><span id="insight-bar"></span></div><div id="insight-text" class="muted"></div></div>
+  </section>
+  <section id="activity" class="page hidden"><div class="card"><div class="card-head"><h2>Recent activity</h2><button class="secondary" onclick="loadActivity()">Refresh</button></div><div class="list" id="activity-list"></div></div></section>
+  <section id="settings" class="page hidden"><div class="card" style="max-width:650px"><h2 style="margin-bottom:16px">Your preferences</h2><form class="form" id="settings-form"><label class="muted">Display name</label><input id="s-name" maxlength="80"/><div class="row"><div><label class="muted">Workday starts</label><input id="s-start" type="time" required/></div><div><label class="muted">Workday ends</label><input id="s-end" type="time" required/></div></div><label class="muted">Break between tasks (minutes)</label><input id="s-break" type="number" min="0" max="90" required/><button>Save preferences</button></form><div style="height:20px"></div><h2>Local AI status</h2><p class="sub">Ollama runs on your own computer. If unavailable, task management and rule-based planning continue to work.</p><button class="secondary" onclick="checkHealth()">Check AI connection</button></div></section>
+</main>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script>
+const $ = id => document.getElementById(id);
+let tasks = [], settings = {};
+const titles = {
+ overview:["YOUR COMMAND CENTER","Good day. Let's make progress.","A clear plan beats a busy day."],
+ tasks:["TASK MANAGEMENT","Make room for what matters.","Capture it, prioritize it, get it done."],
+ assistant:["YOUR AI OPERATOR","What can I help you accomplish?","Ask questions, explore priorities, and plan your work."],
+ schedule:["PLAN WITH INTENTION","Your day, made actionable.","Review your schedule before applying changes."],
+ insights:["YOUR MOMENTUM","Progress you can actually measure.","Insights based on your saved task history."],
+ activity:["TRANSPARENCY","Every action, accounted for.","Review recent changes and assistant activity."],
+ settings:["MAKE IT YOURS","Your workflow, your rules.","Configure your local productivity preferences."]
+};
+async function api(path, options={}) {
+ const res = await fetch(path,{headers:{"Content-Type":"application/json"},...options});
+ const data = await res.json().catch(()=>({detail:"Unexpected server response"}));
+ if(!res.ok) throw new Error(data.detail || "Request failed");
+ return data;
+}
+function toast(msg){$("toast").textContent=msg;$("toast").classList.remove("hidden");setTimeout(()=>$("toast").classList.add("hidden"),3000)}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function showPage(page){
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+ $(page).classList.remove("hidden");
+ document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+ const t=titles[page];$("eyebrow").textContent=t[0];$("page-title").textContent=t[1];$("page-sub").textContent=t[2];
+ if(page==="tasks")renderTasks();if(page==="schedule")loadPlan();if(page==="activity")loadActivity();if(page==="settings")loadSettings();if(page==="insights")loadStats();
+}
+document.querySelectorAll("[data-page]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.page)));
+function taskCard(t){
+ const completed=t.status==="completed";
+ return `<div class="task"><div style="padding-top:2px"><input type="checkbox" ${completed?"checked":""} aria-label="Complete task" onchange="toggleTask('${t.id}',this.checked)"/></div><div class="task-main"><div class="task-title" style="${completed?"text-decoration:line-through;opacity:.65":""}">${escapeHtml(t.title)}</div><div class="task-meta"><span class="pill ${escapeHtml(t.priority)}">${escapeHtml(t.priority)}</span><span class="pill ${completed?"completed":""}">${escapeHtml(t.status)}</span><br/>${t.deadline?"Deadline: "+escapeHtml(t.deadline.slice(0,10))+" · ":""}${t.duration} min${t.scheduled_start?" · Scheduled "+escapeHtml(t.scheduled_start.slice(11,16)):""}</div>${t.description?`<div class="task-meta">${escapeHtml(t.description)}</div>`:""}<div class="actions"><button class="secondary" onclick="editTask('${t.id}')">Edit</button><button class="danger" onclick="deleteTask('${t.id}')">Delete</button></div></div></div>`;
+}
+async function refresh(){
+ try{tasks=await api("/api/tasks");renderTasks();await loadStats();renderOverview();await checkHealth();}catch(e){toast("Could not load data: "+e.message)}
+}
+function renderTasks(){
+ const q=($("task-search")?.value||"").toLowerCase();
+ const filtered=tasks.filter(t=>(t.title+" "+t.description).toLowerCase().includes(q));
+ $("task-list").innerHTML=filtered.length?filtered.map(taskCard).join(""):'<div class="empty">No tasks yet. Add one using the form or load sample tasks.</div>';
+}
+function renderOverview(){
+ const active=tasks.filter(t=>t.status!=="completed");
+ const rank={urgent:0,high:1,medium:2,low:3};
+ active.sort((a,b)=>(rank[a.priority]??2)-(rank[b.priority]??2)||(a.deadline||"9999").localeCompare(b.deadline||"9999"));
+ $("overview-tasks").innerHTML=active.slice(0,5).map(taskCard).join("")||'<div class="empty">You are all caught up. Add a task to get started.</div>';
+ const urgent=active.filter(t=>t.priority==="urgent"||t.priority==="high").length;
+ $("briefing").textContent=active.length?`You have ${active.length} active task(s), including ${urgent} high/urgent. Start with "${active[0].title}", then review your remaining deadlines.`:"No active tasks. Add a task or load sample tasks to see LifeOS in action.";
+}
+async function loadStats(){
+ const s=await api("/api/stats");
+ $("m-total").textContent=s.total;$("m-pending").textContent=s.pending;$("m-overdue").textContent=s.overdue;$("m-rate").textContent=s.completion_rate+"%";$("rate-bar").style.width=s.completion_rate+"%";
+ $("i-completed").textContent=s.completed;$("i-active").textContent=s.pending;$("i-overdue").textContent=s.overdue;$("i-rate").textContent=s.completion_rate+"%";$("insight-bar").style.width=s.completion_rate+"%";
+ $("insight-text").textContent=s.total?`${s.completed} of ${s.total} tasks completed. ${s.overdue?`${s.overdue} task(s) are overdue; consider revising their deadlines.`:"No overdue tasks detected."}`:"No task history yet. Add and complete tasks to generate meaningful insights.";
+}
+async function toggleTask(id,checked){
+ try{await api("/api/tasks/"+id,{method:"PATCH",body:JSON.stringify({status:checked?"completed":"pending"})});await refresh();toast(checked?"Task completed":"Task reopened")}catch(e){toast(e.message)}
+}
+async function deleteTask(id){
+ const t=tasks.find(x=>x.id===id);if(!t||!confirm(`Delete "${t.title}"? This cannot be undone.`))return;
+ try{await api("/api/tasks/"+id,{method:"DELETE"});await refresh();toast("Task deleted")}catch(e){toast(e.message)}
+}
+async function editTask(id){
+ const t=tasks.find(x=>x.id===id);if(!t)return;
+ const title=prompt("Task title:",t.title);if(title===null)return;if(!title.trim())return toast("Title cannot be empty");
+ const priority=prompt("Priority: low, medium, high, urgent",t.priority);if(priority===null)return;
+ if(!["low","medium","high","urgent"].includes(priority))return toast("Invalid priority");
+ try{await api("/api/tasks/"+id,{method:"PATCH",body:JSON.stringify({title:title.trim(),priority})});await refresh();toast("Task updated")}catch(e){toast(e.message)}
+}
+$("task-form").addEventListener("submit",async e=>{
+ e.preventDefault();const body={title:$("task-title").value.trim(),description:$("task-description").value,priority:$("task-priority").value,duration:Number($("task-duration").value),deadline:$("task-deadline").value||null};
+ try{await api("/api/tasks",{method:"POST",body:JSON.stringify(body)});e.target.reset();$("task-duration").value=60;await refresh();toast("Task saved")}catch(err){toast(err.message)}
+});
+$("quick-form").addEventListener("submit",async e=>{
+ e.preventDefault();try{await api("/api/tasks",{method:"POST",body:JSON.stringify({title:$("quick-title").value.trim(),priority:$("quick-priority").value,duration:Number($("quick-duration").value)})});e.target.reset();$("quick-duration").value=60;await refresh();toast("Task added")}catch(err){toast(err.message)}
+});
+$("task-search").addEventListener("input",renderTasks);
+async function loadPlan(){
+ try{
+ const p=await api("/api/plan");$("plan-date").textContent=p.date;
+ $("plan-list").innerHTML=p.blocks.length?p.blocks.map(b=>`<div class="schedule-block"><div class="schedule-time">${escapeHtml(b.start.slice(11,16))} – ${escapeHtml(b.end.slice(11,16))} · ${b.duration} min</div><div class="schedule-title">${escapeHtml(b.title)}</div><div class="task-meta">Priority: ${escapeHtml(b.priority)}</div></div>`).join(""):'<div class="empty">No tasks fit in your remaining workday. Add tasks or adjust working hours.</div>';
+ $("unscheduled").innerHTML=p.unscheduled.length?'<h2 style="margin-top:18px">Needs another time</h2>'+p.unscheduled.map(x=>`<div class="notice"><b>${escapeHtml(x.task.title)}</b>: ${escapeHtml(x.reason)}</div>`).join(""):"";
+ }catch(e){toast(e.message)}
+}
+async function applyPlan(){
+ if(!confirm("Apply this proposed schedule to your unfinished tasks?"))return;
+ try{const p=await api("/api/plan/apply",{method:"POST"});await refresh();await loadPlan();toast(`Applied schedule to ${p.blocks.length} task(s)`)}catch(e){toast(e.message)}
+}
+function addBubble(text,role){const el=document.createElement("div");el.className="bubble "+role;el.textContent=text;$("messages").appendChild(el);$("messages").scrollTop=$("messages").scrollHeight}
+async function sendChat(message){
+ if(!message.trim())return;addBubble(message,"user");
+ $("chat-input").value="";const waiting=document.createElement("div");waiting.className="bubble assistant";waiting.textContent="Thinking…";$("messages").appendChild(waiting);
+ try{const result=await api("/api/chat",{method:"POST",body:JSON.stringify({message})});waiting.remove();addBubble(result.reply,"assistant");if(result.mode==="fallback")toast("Using local rule-based fallback")}catch(e){waiting.remove();addBubble("I couldn't process that request: "+e.message,"assistant")}
+}
+$("chat-form").addEventListener("submit",e=>{e.preventDefault();sendChat($("chat-input").value)});
+function chatStarter(msg){showPage("assistant");sendChat(msg)}
+async function loadActivity(){
+ try{const rows=await api("/api/activity");$("activity-list").innerHTML=rows.length?rows.map(r=>`<div class="task"><div class="task-main"><div class="task-title">${escapeHtml(r.action)}</div><div class="task-meta">${escapeHtml(r.details)}<br/>${escapeHtml(r.created_at)}</div></div></div>`).join(""):'<div class="empty">No activity recorded yet.</div>'}catch(e){toast(e.message)}
+}
+async function loadSettings(){
+ try{settings=await api("/api/settings");$("s-name").value=settings.display_name;$("s-start").value=settings.work_start;$("s-end").value=settings.work_end;$("s-break").value=settings.break_minutes}catch(e){toast(e.message)}
+}
+$("settings-form").addEventListener("submit",async e=>{
+ e.preventDefault();if($("s-start").value >= $("s-end").value)return toast("End of workday must be after start");
+ try{await api("/api/settings",{method:"PUT",body:JSON.stringify({display_name:$("s-name").value,work_start:$("s-start").value,work_end:$("s-end").value,break_minutes:Number($("s-break").value)})});toast("Preferences saved");await refresh()}catch(err){toast(err.message)}
+});
+async function checkHealth(){
+ try{const h=await api("/api/health");$("ai-status").textContent=h.ollama_available?`Ollama connected · ${h.model}`:"Local fallback mode";$("ai-dot").style.background=h.ollama_available?"var(--green)":"#e5b567"}catch(e){$("ai-status").textContent="Backend unavailable";$("ai-dot").style.background="var(--danger)"}
+}
+async function seedDemo(){
+ try{const r=await api("/api/demo/seed",{method:"POST"});await refresh();toast(r.message)}catch(e){toast(e.message)}
+}
+refresh();
+</script>
+</body>
+</html>
